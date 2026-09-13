@@ -1,11 +1,21 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
+from prometheus_fastapi_instrumentator import Instrumentator
 import pika
 import json
 import os
+import time
 from . import models
+from prometheus_client import Counter
 
 app = FastAPI()
+
+BOOKINGS_CREATED = Counter(
+    'bookings_created_total',
+    'Total number of bookings created'
+)
+
+Instrumentator().instrument(app).expose(app)
 
 models.Base.metadata.create_all(bind=models.engine)
 
@@ -44,4 +54,5 @@ def create_booking(user_id: int, event_name: str, seat_number: str, db: Session 
     except Exception as e:
         print(f"Failed to send message to RabbitMQ: {e}")
 
+    BOOKINGS_CREATED.inc()
     return {"booking": db_booking, "status": "created"}

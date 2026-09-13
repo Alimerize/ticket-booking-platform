@@ -2,6 +2,12 @@ import pika
 import json
 import time
 import sys
+from prometheus_client import Counter, start_http_server
+
+NOTIFICATIONS_SENT = Counter(
+    'notifications_sent_total',
+    'Total number of notifications sent'
+)
 
 def callback(ch, method, properties, body):
     print(f" [x] Received booking notification: {body}")
@@ -10,6 +16,9 @@ def callback(ch, method, properties, body):
     print(" [x] Notification sent successfully!")
 
 def main():
+    start_http_server(8000)
+    print(" [*] Metrics server started on :8000")
+
     while True:
         try:
             connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))

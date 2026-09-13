@@ -1,8 +1,9 @@
 fastapi
 uvicorn
 sqlalchemy
-asyncpg
+psycopg2-binary
 redis
 pika
 python-dotenv
-psycopg2-binary>=2.9.0
+prometheus-fastapi-instrumentator
+prometheus-client
