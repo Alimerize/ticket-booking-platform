@@ -1,0 +1,22 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: booking-platform-alerts
+  namespace: monitoring
+  labels:
+    release: monitoring
+spec:
+  groups:
+  - name: booking-platform.rules
+    rules:
+    - alert: HighErrorRate
+      expr: |
+        sum(rate(http_requests_total{job="booking-service", status=~"5.."}[5m]))
+        /
+        sum(rate(http_requests_total{job="booking-service"}[5m])) > 0.05
+      for: 2m
+      labels:
+        severity: critical
+      annotations:
+        summary: "Высокий процент ошибок (>5%) в booking-service"
+        description: "Error rate: {{ $value | humanizePercentage }}. Проверьте логи и состояние PostgreSQL."
