@@ -46,11 +46,14 @@ kind: Service
 metadata:
   name: booking-service
   namespace: booking-platform
+  labels:
+    app: booking-service
 spec:
   selector:
     app: booking-service
   ports:
-  - port: 8000
+  - name: http
+    port: 8000
     targetPort: 8000
   type: ClusterIP   
 ---
@@ -77,6 +80,7 @@ spec:
   selector:
     app: notification-service
   ports:
-  - port: 80  
-    targetPort: 80   
+  - name: metrics
+    port: 8001
+    targetPort: 8001   
   type: ClusterIP
