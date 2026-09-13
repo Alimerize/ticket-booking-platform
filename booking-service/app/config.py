@@ -1,18 +1,24 @@
 import os
 
+
 class Settings:
-    """Centralized configuration loaded from environment variables."""
+
     DATABASE_URL: str = os.getenv(
         "DATABASE_URL",
-        "postgresql://user:password@postgres:5432/booking_db"
+        "postgresql://user:password@postgres:5432/booking_db",
     )
-    REDIS_HOST: str = os.getenv("REDIS_HOST", "redis")
-    REDIS_PORT: int = int(os.getenv("REDIS_PORT", "6379"))
-    RABBITMQ_HOST: str = os.getenv("RABBITMQ_HOST", "rabbitmq")
-    RABBITMQ_PORT: int = int(os.getenv("RABBITMQ_PORT", "5672"))
-    RABBITMQ_QUEUE: str = os.getenv("RABBITMQ_QUEUE", "booking_notifications")
-    RABBITMQ_RETRY_ATTEMPTS: int = int(os.getenv("RABBITMQ_RETRY_ATTEMPTS", "5"))
-    RABBITMQ_RETRY_DELAY: float = float(os.getenv("RABBITMQ_RETRY_DELAY", "2.0"))
+
+    RABBITMQ_URL: str = os.getenv(
+        "RABBITMQ_URL",
+        "amqp://guest:guest@rabbitmq:5672/",
+    )
+    RABBITMQ_QUEUE: str = os.getenv("QUEUE_NAME", "booking_events")
+
+    PUBLISH_MAX_RETRIES: int = int(os.getenv("PUBLISH_MAX_RETRIES", "3"))
+    PUBLISH_RETRY_DELAY: float = float(os.getenv("PUBLISH_RETRY_DELAY", "1.0"))
+
+    METRICS_PORT: int = int(os.getenv("METRICS_PORT", "8000"))
     LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")
+
 
 settings = Settings()
