@@ -19,3 +19,5 @@ venv/
 # Kubernetes secrets
 **/secrets.yaml
 **/*-secret.yaml
+k8s/secrets.local.yaml
+*.secret.yaml
