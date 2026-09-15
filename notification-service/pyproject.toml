@@ -1,15 +1,10 @@
 [tool.ruff]
 line-length = 100
 target-version = "py311"
-exclude = [".venv", "alembic/versions"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "UP", "C4", "SIM"]
-# B008: FastAPI Depends() in defaults is idiomatic — ignore it
 ignore = ["E501", "B008"]
-
-[tool.ruff.lint.per-file-ignores]
-"tests/*" = ["S101"]
 
 [tool.ruff.format]
 quote-style = "double"

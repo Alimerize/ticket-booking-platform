@@ -14,7 +14,7 @@ os.environ.setdefault("RABBITMQ_URL", "amqp://guest:guest@localhost:5672/")
 os.environ.setdefault("METRICS_PORT", "8000")
 os.environ.setdefault("LOG_LEVEL", "WARNING")
 
-from typing import Generator  # noqa: E402
+from collections.abc import Generator  # noqa: E402
 from unittest.mock import MagicMock  # noqa: E402
 
 import pytest  # noqa: E402
@@ -23,9 +23,9 @@ from sqlalchemy import create_engine  # noqa: E402
 from sqlalchemy.orm import Session, sessionmaker  # noqa: E402
 from sqlalchemy.pool import StaticPool  # noqa: E402
 
-from app.database import Base, get_db  # noqa: E402
 from app import main as app_main  # noqa: E402
 from app import models  # noqa: E402,F401  -- ensure models registered
+from app.database import Base, get_db  # noqa: E402
 
 
 @pytest.fixture(scope="session")
@@ -70,9 +70,7 @@ def mock_publish(monkeypatch) -> MagicMock:
 
 
 @pytest.fixture()
-def client(
-    db_session: Session, mock_publish: MagicMock
-) -> Generator[TestClient, None, None]:
+def client(db_session: Session, mock_publish: MagicMock) -> Generator[TestClient, None, None]:
     def override_get_db():
         try:
             yield db_session

@@ -1,0 +1,29 @@
+# Normalize line endings: LF in repository, LF on checkout
+* text=auto eol=lf
+
+# Explicitly mark text files
+*.py     text eol=lf
+*.pyi    text eol=lf
+*.txt    text eol=lf
+*.md     text eol=lf
+*.yaml   text eol=lf
+*.yml    text eol=lf
+*.json   text eol=lf
+*.toml   text eol=lf
+*.ini    text eol=lf
+*.cfg    text eol=lf
+Dockerfile text eol=lf
+Makefile   text eol=lf
+
+# Binary files — never touch
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.gif    binary
+*.ico    binary
+*.pdf    binary
+*.whl    binary
+*.tar.gz binary
+
+# Linguist
+*.lock   linguist-generated

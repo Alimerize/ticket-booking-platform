@@ -62,16 +62,21 @@ def create_booking(payload: BookingCreate, db: Session = Depends(get_db)):
 
     bookings_created_total.inc()
 
-    publish_event({
-        "booking_id": booking.id,
-        "user_id": booking.user_id,
-        "event_name": booking.event_name,
-        "seat_number": booking.seat_number,
-    })
+    publish_event(
+        {
+            "booking_id": booking.id,
+            "user_id": booking.user_id,
+            "event_name": booking.event_name,
+            "seat_number": booking.seat_number,
+        }
+    )
 
     logger.info(
         "Booking created: id=%d user_id=%d event=%s seat=%s",
-        booking.id, booking.user_id, booking.event_name, booking.seat_number,
+        booking.id,
+        booking.user_id,
+        booking.event_name,
+        booking.seat_number,
     )
 
     return booking
@@ -94,6 +99,4 @@ def get_booking(booking_id: int, db: Session = Depends(get_db)):
 
 
 # Metrics
-Instrumentator().instrument(app).expose(
-    app, endpoint="/metrics", include_in_schema=False
-)
+Instrumentator().instrument(app).expose(app, endpoint="/metrics", include_in_schema=False)

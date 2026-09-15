@@ -1,10 +1,10 @@
 """Unit-тесты publish_event — с моком pika."""
 
 import json
+from unittest.mock import MagicMock
 
 import pika
 import pytest
-from unittest.mock import MagicMock
 
 from app import rabbitmq
 

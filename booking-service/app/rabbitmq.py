@@ -17,7 +17,6 @@ def _make_connection() -> pika.BlockingConnection:
 
 
 def publish_event(payload: dict) -> bool:
-
     body = json.dumps(payload, default=str).encode("utf-8")
     last_exc: Exception | None = None
 
@@ -38,7 +37,8 @@ def publish_event(payload: dict) -> bool:
                 )
                 logger.info(
                     "Published event to %s (attempt %d)",
-                    settings.RABBITMQ_QUEUE, attempt,
+                    settings.RABBITMQ_QUEUE,
+                    attempt,
                 )
                 return True
             finally:
@@ -48,11 +48,16 @@ def publish_event(payload: dict) -> bool:
             last_exc = exc
             logger.warning(
                 "Publish attempt %d/%d failed: %s",
-                attempt, settings.PUBLISH_MAX_RETRIES, exc,
+                attempt,
+                settings.PUBLISH_MAX_RETRIES,
+                exc,
             )
             if attempt < settings.PUBLISH_MAX_RETRIES:
                 time.sleep(settings.PUBLISH_RETRY_DELAY * attempt)  # backoff
 
-    logger.error("Failed to publish event after %d attempts: %s",
-                 settings.PUBLISH_MAX_RETRIES, last_exc)
+    logger.error(
+        "Failed to publish event after %d attempts: %s",
+        settings.PUBLISH_MAX_RETRIES,
+        last_exc,
+    )
     return False

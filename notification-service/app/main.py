@@ -74,7 +74,6 @@ def callback(ch, method, properties, body):
 
 
 def _consume_loop() -> None:
-    
     while not shutdown_event.is_set():
         conn = None
         try:
@@ -102,7 +101,8 @@ def _consume_loop() -> None:
                 break
             logger.warning(
                 "RabbitMQ unavailable (%s), retrying in %ss",
-                exc, settings.RECONNECT_DELAY,
+                exc,
+                settings.RECONNECT_DELAY,
             )
             time.sleep(settings.RECONNECT_DELAY)
         except Exception as exc:
@@ -120,22 +120,22 @@ def _consume_loop() -> None:
     logger.info("Consumer loop stopped")
 
 
-
 def main() -> None:
-    consumer_thread = threading.Thread(
-        target=_consume_loop, name="rabbitmq-consumer", daemon=True
-    )
+    consumer_thread = threading.Thread(target=_consume_loop, name="rabbitmq-consumer", daemon=True)
     consumer_thread.start()
 
     # Uvicorn сам корректно обрабатывает SIGTERM/SIGINT
     config = uvicorn.Config(
-        app, host="0.0.0.0", port=settings.METRICS_PORT, log_level="info",
+        app,
+        host="0.0.0.0",
+        port=settings.METRICS_PORT,
+        log_level="info",
     )
     server = uvicorn.Server(config)
     logger.info("Starting HTTP server on :%s", settings.METRICS_PORT)
 
     try:
-        server.run()   # блокируется до SIGTERM/SIGINT
+        server.run()  # блокируется до SIGTERM/SIGINT
     finally:
         logger.info("HTTP server stopped, signalling consumer to exit...")
         shutdown_event.set()
