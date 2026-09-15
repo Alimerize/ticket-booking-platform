@@ -1,36 +1,32 @@
+import json
 import logging
 import sys
-import json
-from datetime import datetime
+from datetime import datetime, timezone
 
 
-class JSONFormatter(logging.Formatter):
-    """Structured JSON logs — ready for Loki / ELK ingestion."""
+class JsonFormatter(logging.Formatter):
+    def __init__(self, service_name: str):
+        super().__init__()
+        self.service_name = service_name
 
     def format(self, record: logging.LogRecord) -> str:
-        log_record = {
-            "timestamp": datetime.utcnow().isoformat() + "Z",
+        payload = {
+            "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
             "level": record.levelname,
             "logger": record.name,
             "message": record.getMessage(),
-            "service": "booking-service",
+            "service": self.service_name,
         }
         if record.exc_info:
-            log_record["exception"] = self.formatException(record.exc_info)
-        return json.dumps(log_record)
+            payload["exc_info"] = self.formatException(record.exc_info)
+        return json.dumps(payload, ensure_ascii=False)
 
 
 def setup_logging(level: str = "INFO") -> None:
     handler = logging.StreamHandler(sys.stdout)
-    handler.setFormatter(JSONFormatter())
+    handler.setFormatter(JsonFormatter("booking-service"))
 
     root = logging.getLogger()
     root.handlers.clear()
     root.addHandler(handler)
     root.setLevel(level.upper())
-
-    for name in ("uvicorn", "uvicorn.error", "uvicorn.access"):
-        logger = logging.getLogger(name)
-        logger.handlers.clear()
-        logger.addHandler(handler)
-        logger.propagate = False

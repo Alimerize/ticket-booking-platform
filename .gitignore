@@ -21,3 +21,11 @@ venv/
 **/*-secret.yaml
 k8s/secrets.local.yaml
 *.secret.yaml
+
+# Python test/coverage artifacts
+.coverage
+coverage.xml
+htmlcov/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
