@@ -1,3 +1,10 @@
+# Ticket Booking Platform
+
+[![CI](https://github.com/Alimerize/ticket-booking-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/Alimerize/ticket-booking-platform/actions/workflows/ci.yml)
+[![Tests](https://img.shields.io/badge/tests-15%20passed-brightgreen)](#)
+[![Coverage](https://img.shields.io/badge/coverage-93%25-green)](#)
+[![Python](https://img.shields.io/badge/python-3.12-blue)](#)
+
 ### SRE-стенд: платформа для бронирования билетов
  
 > Здесь я показала, как проектирую, разворачиваю и поддерживаю отказоустойчивые микросервисные системы.
