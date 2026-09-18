@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: booking-platform
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: booking-platform
+  source:
+    repoURL: https://github.com/Alimerize/ticket-booking-platform.git
+    targetRevision: main
+    path: k8s
+    directory:
+      recurse: true
+      exclude: "secrets.yaml"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: booking-platform
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas

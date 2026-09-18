@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: booking-platform
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  description: Ticket booking platform
+  sourceRepos:
+    - "https://github.com/Alimerize/ticket-booking-platform.git"
+  destinations:
+    - namespace: booking-platform
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist: []
+  namespaceResourceWhitelist:
+    - group: ""
+      kind: "*"
+    - group: "apps"
+      kind: "*"
+    - group: "batch"
+      kind: "*"
+    - group: "networking.k8s.io"
+      kind: "*"
+    - group: "autoscaling"
+      kind: "*"
+    - group: "policy"
+      kind: "*"
+    - group: "monitoring.coreos.com"
+      kind: "*"
